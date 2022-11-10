@@ -14,7 +14,7 @@ function llegeix(string $select): array
 {
     try {
         $hostname = "localhost";
-        $dbname = "dwes-victorflores-autpdo";
+        $dbname = "dwes_victorflores_autpdo";
         $username = "dwes-user";
         $pw = "dwes-pass";
         $pdo = new PDO("mysql:host=$hostname;dbname=$dbname", "$username", "$pw");
