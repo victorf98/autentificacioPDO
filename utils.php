@@ -29,7 +29,6 @@ function llegeix(string $select): array
 
     $var = [];
     if ($select == SELECT_USER) {
-        //itero
         foreach ($query as $row) {
             $var[$row["email"]] = [ "usuari" => $row["usuari"], "email" => $row["email"], "password" => $row["password"]];
         }
@@ -51,7 +50,7 @@ function llegeix(string $select): array
  * Guarda les dades a un fitxer
  *
  * @param array $dades
- * @param string $file
+ * @param string $taula
  */
 function escriu(array $dades, string $taula): void
 {
@@ -83,22 +82,6 @@ function print_conns(string $email): string
     return $output;
 }
 
-//Comprova que les dades d'usuari i password tinguin la llargada correcte
-function dadesCorrectes($dada)
-{
-    if (str_contains($dada, "@")) {
-        $es_ok =
-        strlen($dada) >= 10 &&
-        strlen($dada) <= 30;
-    }else {
-        $es_ok =
-        strlen($dada) >= 5 &&
-        strlen($dada) <= 10;
-    }
-
-    return $es_ok;
-}
-
 /**
  * Inserta les dades a la base de dades
  * 
@@ -106,7 +89,7 @@ function dadesCorrectes($dada)
  * @param string $taula
  * @param array $dades
  */
-function insertBD(string $columnes, string $taula, array $dades, string $user_email = "")
+function insertBD(string $columnes, string $taula, array $dades)
 {
     try {
         $hostname = "localhost";
