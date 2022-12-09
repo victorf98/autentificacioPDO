@@ -27,9 +27,9 @@ function insert(string $taula, array $contingut): void
             break;
 
         case FASE:
-            $sql = "insert into " . $taula . " values(?, ?, ?, ?)";
+            $sql = "insert into " . $taula . " values($contingut[0], $contingut[1], $contingut[2])";
             $query = $pdo->prepare($sql);
-            $query->execute($contingut);
+            $query->execute();
             break;
 
         case ADMIN:
@@ -357,7 +357,7 @@ function obtenirConcursantsNovaFase(int $fase): array
     if ($j == 1) {
         return $concursants_nous;
     } else {
-        return calcularConcursantEliminat();
+        //return calcularConcursantEliminat();
     }
 }
 
