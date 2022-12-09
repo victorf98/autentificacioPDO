@@ -14,7 +14,7 @@
         }
 
         function insert(){
-            insert(FASE, [$this->nFase, $this->dataInici, $this->dataFi, json_encode([])]);
+            insert(FASE, [$this->nFase, $this->dataInici, $this->dataFi]);
         }
 
         function updateFase():void{
