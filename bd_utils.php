@@ -27,7 +27,7 @@ function insert(string $taula, array $contingut): void
             break;
 
         case FASE:
-            $sql = "insert into " . $taula . "(nFase, dataInici, dataFi) values($contingut[0], '$contingut[1]', '$contingut[2]')";
+            $sql = "insert into " . $taula . "(nFase, dataInici, dataFi) values($contingut[0], '$contingut[1]', '$contingut[2]', $contingut[3])";
             $query = $pdo->prepare($sql);
             $query->execute();
             break;
