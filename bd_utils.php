@@ -278,7 +278,7 @@ function trobarFasePerData(string $data): array|null
     }
 
     //preparem i executem la consulta
-    $query = $pdo->prepare("select * from fase where dataInici < ? AND dataFi > ?");
+    $query = $pdo->prepare("select * from fase where dataInici <= ? AND dataFi >= ?");
     $query->execute([$data, $data]);
 
     $fase = [];
