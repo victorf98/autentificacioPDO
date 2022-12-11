@@ -33,7 +33,11 @@ class Concursant{
         update(CONCURSANT, "raça", $this->raça, "id", $id_antiga);
     }
 
-    function afegirVot(string $id): void{
-        update(CONCURSANT, "vots", $this->vots + 1, "id", $id);
+    function afegirVot(): void{
+        update(CONCURSANT, "vots", $this->vots + 1, "id", $this->id);
+    }
+
+    function treureVot(): void{
+        update(CONCURSANT, "vots", $this->vots - 1, "id", $this->id);
     }
 }

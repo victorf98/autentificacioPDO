@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once "bd_utils.php";
 $fase = obtenirFase($_POST["nFase"]);
 if ($fase == []) {
@@ -8,5 +10,5 @@ if ($fase == []) {
     $fase_update = new Fase($fase["nFase"], $_POST["dataInici"], $_POST["dataFi"]);
     $fase_update->updateFase();
 }
-header("Location: admin.php");
+header("Location: admin.php?data=" . $_SESSION["data"]);
 ?>

@@ -6,6 +6,9 @@ const CONCURSANT = "concursant";
 const FASE = "fase";
 const ADMIN = "admin";
 
+/**
+ * Funció que crea nous concursants/fases/admins depenent de què es passi per paràmetre
+ */
 function insert(string $taula, array $contingut): void
 {
     try {
@@ -46,6 +49,9 @@ function insert(string $taula, array $contingut): void
     unset($query);
 }
 
+/**
+ * Funció que ens actualitza registre(s) a una taula
+ */
 function update(string $taula, string $columna, int|string $valor, string $columna_unica, string|int $valor_unic): void
 {
     try {
@@ -67,6 +73,9 @@ function update(string $taula, string $columna, int|string $valor, string $colum
     unset($query);
 }
 
+/**
+ * Funció que ens ho actualitza tot (o casi tot) a una taula. Creada per fer actualitzacions en massa
+ */
 function updateTot(string $taula, string $columna, int|string $valor, string $columna_unica, string|int $valor_unic): void
 {
     try {
@@ -88,6 +97,9 @@ function updateTot(string $taula, string $columna, int|string $valor, string $co
     unset($query);
 }
 
+/**
+ * Funció que ens borra un registre a una taula a la base de dades
+ */
 function delete(string $taula, string $columna_unica, int|string $valor_unic): void
 {
     try {
@@ -101,14 +113,42 @@ function delete(string $taula, string $columna_unica, int|string $valor_unic): v
         exit;
     }
 
-    $sql = "delete from ? where ? = ?";
+    $sql = "delete from $taula where $columna_unica = $valor_unic";
     $query = $pdo->prepare($sql);
-    $query->execute(array($taula, $columna_unica, $valor_unic));
+    $query->execute();
 
     unset($pdo);
     unset($query);
 }
 
+/**
+ * Funció que ens borra registres en massa a una taula a la base de dades
+ */
+function deleteTot(string $taula, string $columna_unica, int|string $valor_unic): void
+{
+    try {
+        $hostname = "localhost";
+        $dbname = "concurs_gossos_atura";
+        $username = "dwes-user";
+        $pw = "dwes-pass";
+        $pdo = new PDO("mysql:host=$hostname;dbname=$dbname", "$username", "$pw");
+    } catch (PDOException $e) {
+        echo "Failed to get DB handle: " . $e->getMessage() . "\n";
+        exit;
+    }
+
+    $sql = "delete from $taula where $columna_unica <> $valor_unic";
+    $query = $pdo->prepare($sql);
+    $query->execute();
+
+    unset($pdo);
+    unset($query);
+}
+
+/**
+ * Funció que ens obté un usuari de la base de dades passant-li el nom i la contrasenya.
+ * Si no hi és ens retorna null
+ */
 function obtenirUsuari(string $usuari, string $contrasenya): Admin|null
 {
     try {
@@ -138,6 +178,9 @@ function obtenirUsuari(string $usuari, string $contrasenya): Admin|null
     return $admin;
 }
 
+/**
+ * Funció que ens retorna una array amb totes les dades d'una fase en forma d'array
+ */
 function obtenirFase(int $nFase): array|null
 {
     try {
@@ -168,6 +211,9 @@ function obtenirFase(int $nFase): array|null
     return $fase;
 }
 
+/**
+ * Funció que ens retorna totes les fases creades a la base de dades
+ */
 function obtenirFases(): array|null
 {
     try {
@@ -200,6 +246,9 @@ function obtenirFases(): array|null
     return $fase;
 }
 
+/**
+ * Funció que ens retorna tots els registres a la taula concursant
+ */
 function obtenirTotsElsConcursants(): array|null
 {
     try {
@@ -232,6 +281,11 @@ function obtenirTotsElsConcursants(): array|null
     return $concursants;
 }
 
+
+/**
+ * Funció que ens retorna tots els registres de la taula concursants
+ * on a la columna que es passi per paràmetre es coincideixi amb el paràmetre "id"
+ */
 function obtenirConcursants(string $columna, string|int $id): array|null
 {
     try {
@@ -264,6 +318,11 @@ function obtenirConcursants(string $columna, string|int $id): array|null
     return $concursant;
 }
 
+/**
+ * Funció que ens retorna un registre de la taula fase 
+ * on la data que es passi per paràmetre estigui 
+ * entre les dates d'alguna fase creada
+ */
 function trobarFasePerData(string $data): array|null
 {
     try {
@@ -294,7 +353,10 @@ function trobarFasePerData(string $data): array|null
     return $fase;
 }
 
-function crearConcursantsNovaFase(array $concursants): void
+/**
+ * Funció que en crea els concursants de la fase que s'indiqui per paràmetre
+ */
+function crearConcursantsNovaFase(array $concursants, int $fase): void
 {
     try {
         $hostname = "localhost";
@@ -308,10 +370,10 @@ function crearConcursantsNovaFase(array $concursants): void
     }
 
     foreach ($concursants as $concursant_registre) {
-        $concursant = new Concursant($concursant_registre["nom"], $concursant_registre["imatge"], $concursant_registre["amo"], $concursant_registre["raça"], $concursant_registre["fase"] + 1);
+        $concursant = new Concursant($concursant_registre["nom"], $concursant_registre["imatge"], $concursant_registre["amo"], $concursant_registre["raça"], $fase);
         //preparem i executem la consulta
-        $query = $pdo->prepare("insert into concursants values(?, ?, ?, ?, ?, ?, ?)");
-        $query->execute([$concursant->id, $concursant->nom, $concursant->imatge, $concursant->amo, $concursant->raça, $concursant->fase]);
+        $query = $pdo->prepare("insert into concursant values(?, ?, ?, ?, ?, ?, ?)");
+        $query->execute([$concursant->id, $concursant->nom, $concursant->imatge, $concursant->amo, $concursant->raça, $concursant->fase, 0]);
     }
 
     //eliminem els objectes per alliberar memòria
@@ -319,7 +381,10 @@ function crearConcursantsNovaFase(array $concursants): void
     unset($query);
 }
 
-function obtenirConcursantsNovaFase(int $fase): array
+/**
+ * 
+ */
+function obtenirConcursantsNovaFase(int $fase): array|null
 {
     try {
         $hostname = "localhost";
@@ -332,42 +397,120 @@ function obtenirConcursantsNovaFase(int $fase): array
         exit;
     }
 
-    $query = $pdo->prepare("select * from concursants order by vots ASC where fase = ?");
+    //Obtenim tots els concursants en ordre del que té menys vots al que més
+    $query = $pdo->prepare("select * from concursant where fase = ? order by vots ASC");
     $query->execute([$fase]);
 
     $concursants_nous = [];
-    $i = 0;
 
     foreach ($query as $row) {
-        $concursants_nous[$i] = $row;
-        $i += 1;
+        array_push($concursants_nous, [
+            "id" => $row["id"], "nom" => $row["nom"], "imatge" => $row["imatge"],
+            "amo" => $row["amo"], "raça" => $row["raça"], "fase" => $row["fase"], "vots" => $row["vots"]
+        ]);
     }
 
     $concursants_a_eliminar = [];
-    $j = 0;
-
-    foreach ($concursants_nous as $concursant) {
-        if ($concursant["vots"] == $concursants_nous[0]["vots"]) {
-            $concursants_a_eliminar[$j] = $concursant;
-            unset($concursant);
-            $j += 1;
+    if ($concursants_nous != null) {
+        $vots_minims = $concursants_nous[0]["vots"];
+        $llargada_array = count($concursants_nous);
+        for ($i = 0; $i < $llargada_array; $i++) {
+            if ($concursants_nous[$i]["vots"] == $vots_minims) {
+                array_push($concursants_a_eliminar, $concursants_nous[$i]);
+                unset($concursants_nous[$i]);
+            }
         }
     }
 
-    if ($j == 1) {
-        return $concursants_nous;
-    } else {
-        //return calcularConcursantEliminat();
-    }
+    return comprovarSiNomesHiHaUnPerEliminar($fase, $concursants_nous, $concursants_a_eliminar);
 }
 
-function calcularConcursantEliminat(int $fase, array $concursants_a_eliminar)
+function calcularConcursantEliminat(int $fase, array $concursants_nous, array $concursants_a_eliminar)
 {
-    if ($fase == 1) {
-        unset($concursants_a_eliminar[rand(0, count($concursants_a_eliminar) - 1)]);
-        array_push($concursants_nous, $concursants_a_eliminar);
+    try {
+        $hostname = "localhost";
+        $dbname = "concurs_gossos_atura";
+        $username = "dwes-user";
+        $pw = "dwes-pass";
+        $pdo = new PDO("mysql:host=$hostname;dbname=$dbname", "$username", "$pw");
+    } catch (PDOException $e) {
+        echo "Failed to get DB handle: " . $e->getMessage() . "\n";
+        exit;
+    }
+
+
+    $query = $pdo->prepare("select * from concursant where fase = ? order by vots ASC");
+    $query->execute([$fase]);
+
+    $concursants_pendents = [];
+
+    /**
+     * Posarem tots els concursants que han empatat a la fase 
+     * previament calculada en una array "concursants_pendents"
+     * en ordre de menys vots a més
+     */
+    foreach ($query as $row) {
+        for ($j = 0; $j < count($concursants_a_eliminar); $j++) {
+            if ($row["nom"] == $concursants_a_eliminar[$j]["nom"]) {
+                array_push($concursants_pendents, [
+                    "id" => $row["id"], "nom" => $row["nom"], "imatge" => $row["imatge"],
+                    "amo" => $row["amo"], "raça" => $row["raça"], "fase" => $row["fase"], "vots" => $row["vots"]
+                ]);
+            }
+        }
+    }
+
+    $concursants_per_comprovar = [];
+
+    //Posem el/els concursants que tenen menys vots (empatats a menys vots) a l'array "concursants_per_comprovar"
+    /*foreach ($concursants_pendents as $concursant) {
+        if ($concursant["vots"] == $concursants_pendents[0]["vots"]) {
+            $concursants_per_comprovar[$y] = $concursant;
+            unset($concursant);
+            $y += 1;
+        }
+    }*/
+
+    if ($concursants_pendents != null) {
+        $vots_minims = $concursants_pendents[0]["vots"];
+        $llargada_array = count($concursants_pendents);
+
+        for ($i = 0; $i < $llargada_array; $i++) {
+            if ($concursants_pendents[$i]["vots"] == $vots_minims) {
+                array_push($concursants_per_comprovar, $concursants_pendents[$i]);
+                unset($concursants_pendents[$i]);
+            }
+        }
+
+        //Posem els concursants que no tinguin el mínim de vots a l'array de "concursants_nous"
+        foreach ($concursants_pendents as $concursant) {
+            array_push($concursants_nous, $concursant);
+        }
+    }
+
+    return comprovarSiNomesHiHaUnPerEliminar($fase, $concursants_nous, $concursants_per_comprovar);
+}
+
+function comprovarSiNomesHiHaUnPerEliminar(int $fase, array $concursants_nous, array $concursants_per_comprovar)
+{
+    /**
+     * Si només hi ha un concursant a l'array "concursants_per_comprovar" 
+     * retornarem tots els concursants menys els que té menys vots
+     */
+    if (count($concursants_per_comprovar) == 1) {
         return $concursants_nous;
-    }else{
-        return calcularConcursantEliminat($fase - 1, $concursants_a_eliminar);
+        //En cas contrari mirarem els vots de la fase anterior
+    } else {
+        //Si la fase és la 1 i hi ha empat, s'escull un concursant aleatori per eliminar
+        if ($fase == 1) {
+            unset($concursants_per_comprovar[rand(0, count($concursants_per_comprovar) - 1)]);
+            foreach ($concursants_per_comprovar as $concursant) {
+                array_push($concursants_nous, $concursant);
+            }
+            return $concursants_nous;
+            //Si no és la fase 1 calcularem els vots de la fase prèvia
+        } else {
+            return calcularConcursantEliminat($fase - 1, $concursants_nous, $concursants_per_comprovar);
+        }
     }
 }

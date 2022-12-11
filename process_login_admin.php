@@ -1,4 +1,6 @@
 <?php
+session_start();
+
     session_start();
     require_once "bd_utils.php";
      $usuari = obtenirUsuari($_POST["usuari"], $_POST["contrasenya"]);
@@ -7,6 +9,6 @@
         header("Location: index.php");
      }else {
         $_SESSION["usuari"] = $usuari->user;
-        header("Location: admin.php");
+        header("Location: admin.php?data=" . $_SESSION["data"]);
      }
 ?>

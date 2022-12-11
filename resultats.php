@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once "bd_utils.php";
 ?>
 <!DOCTYPE html>
@@ -26,13 +28,13 @@ require_once "bd_utils.php";
                     <?php
                 }
                 foreach ($concursants as $concursant) {
-                    if (obtenirConcursants("fase", $concursant["fase"] + 1) == null) {
+                    if (obtenirConcursants("id", $concursant["fase"] + 1 . $concursant["nom"]) != null || obtenirConcursants("fase", $concursant["fase"] + 1) == null) {
                     ?>
-                        <img class="dog eliminat" alt="<?php echo $concursant["nom"] ?>" title="<?php echo $concursant["nom"] ?>" src="img/<?php echo $concursant["imatge"] ?>">
+                        <img class="dog" alt="<?php echo $concursant["nom"] ?>" title="<?php echo $concursant["nom"] ?>" src="img/<?php echo $concursant["imatge"] ?>">
                     <?php
                     } else {
                     ?>
-                        <img class="dog" alt="<?php echo $concursant["nom"] ?>" title="<?php echo $concursant["nom"] ?>" src="img/<?php echo $concursant["imatge"] ?>">
+                        <img class="dog eliminat" alt="<?php echo $concursant["nom"] ?>" title="<?php echo $concursant["nom"] ?>" src="img/<?php echo $concursant["imatge"] ?>">
                     <?php
                     }
                     ?>
