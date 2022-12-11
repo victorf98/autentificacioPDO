@@ -5,6 +5,7 @@ require_once "bd_utils.php";
 require_once "class_concursant.php";
 $concursants = obtenirConcursants("nom", $_POST["nom_amagat"]);
 $i = 1;
+//Modifiquem tots els registres de un concursant per cada fase en la que està
 foreach ($concursants as $concursant) {
     $concursant_update = new Concursant($_POST["nom"], $_POST["imatge"], $_POST["amo"], $_POST["raça"], $i);
     $concursant_update->updateConcursant($i . $_POST["nom_amagat"]);

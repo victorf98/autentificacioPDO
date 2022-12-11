@@ -21,10 +21,12 @@ class Concursant{
         $this->vots = $vots;
     }
 
+    //Crear nou concursant
     function insert(){
         insert(CONCURSANT, [$this->id, $this->nom, $this->imatge, $this->amo, $this->raça, $this->fase, $this->vots]);
     }
 
+    //Actualitzar un concursant
     function updateConcursant(string|int $id_antiga){
         update(CONCURSANT, "id", $this->id, "id", $id_antiga);
         update(CONCURSANT, "nom", $this->nom, "id", $id_antiga);
@@ -33,10 +35,12 @@ class Concursant{
         update(CONCURSANT, "raça", $this->raça, "id", $id_antiga);
     }
 
+    //Afegir un vot
     function afegirVot(): void{
         update(CONCURSANT, "vots", $this->vots + 1, "id", $this->id);
     }
 
+    //Treure un vot en cas que es vulgui canviar el vot
     function treureVot(): void{
         update(CONCURSANT, "vots", $this->vots - 1, "id", $this->id);
     }

@@ -28,10 +28,12 @@ require_once "bd_utils.php";
                     <?php
                 }
                 foreach ($concursants as $concursant) {
+                    //Si el concursant està a la següent fase està en color
                     if (obtenirConcursants("id", $concursant["fase"] + 1 . $concursant["nom"]) != null || obtenirConcursants("fase", $concursant["fase"] + 1) == null) {
                     ?>
                         <img class="dog" alt="<?php echo $concursant["nom"] ?>" title="<?php echo $concursant["nom"] ?>" src="img/<?php echo $concursant["imatge"] ?>">
                     <?php
+                    //Si el concursant no està a la següent fase està en blanc i negre
                     } else {
                     ?>
                         <img class="dog eliminat" alt="<?php echo $concursant["nom"] ?>" title="<?php echo $concursant["nom"] ?>" src="img/<?php echo $concursant["imatge"] ?>">

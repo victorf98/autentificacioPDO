@@ -10,6 +10,7 @@ class Admin {
         $this->password = $password;
     }
 
+    //Crear nou usuari admin
     function insert(){
         insert(ADMIN, [$this->user, md5($this->password)]);
     }

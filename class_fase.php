@@ -13,10 +13,12 @@
             $this->dataFi =  date("Y-m-d", strtotime($dataFi));
         }
 
+        //Crear nova fase
         function insert(){
             insert(FASE, [$this->nFase, $this->dataInici, $this->dataFi]);
         }
 
+        //Actualitzar les dates d'una fase
         function updateFase():void{
             update(FASE, "dataInici", $this->dataInici, "nFase", $this->nFase);
             update(FASE, "dataFi", $this->dataFi, "nFase", $this->nFase);

@@ -382,7 +382,8 @@ function crearConcursantsNovaFase(array $concursants, int $fase): void
 }
 
 /**
- * 
+ * Funció que ordena tots els concursants d'una fase 
+ * de menys a més vots i comprova quin d'aquests concursants no passa a la següent fase
  */
 function obtenirConcursantsNovaFase(int $fase): array|null
 {
@@ -425,6 +426,10 @@ function obtenirConcursantsNovaFase(int $fase): array|null
     return comprovarSiNomesHiHaUnPerEliminar($fase, $concursants_nous, $concursants_a_eliminar);
 }
 
+/**
+ * Fem càlculs i posem els concursants que es salven a una array 
+ * i el(s) que està(n) empatat(s) al mínim de vots a una altra array
+ */
 function calcularConcursantEliminat(int $fase, array $concursants_nous, array $concursants_a_eliminar)
 {
     try {
@@ -463,13 +468,6 @@ function calcularConcursantEliminat(int $fase, array $concursants_nous, array $c
     $concursants_per_comprovar = [];
 
     //Posem el/els concursants que tenen menys vots (empatats a menys vots) a l'array "concursants_per_comprovar"
-    /*foreach ($concursants_pendents as $concursant) {
-        if ($concursant["vots"] == $concursants_pendents[0]["vots"]) {
-            $concursants_per_comprovar[$y] = $concursant;
-            unset($concursant);
-            $y += 1;
-        }
-    }*/
 
     if ($concursants_pendents != null) {
         $vots_minims = $concursants_pendents[0]["vots"];
@@ -491,6 +489,10 @@ function calcularConcursantEliminat(int $fase, array $concursants_nous, array $c
     return comprovarSiNomesHiHaUnPerEliminar($fase, $concursants_nous, $concursants_per_comprovar);
 }
 
+/**
+ * Funció que calcula si només hi ha un concursant amb el mínim de vots o estàn empatats. 
+ * Si hi ha empat es passarà a mirar els vots de la fase prèvia o es decidirà aleatòriament
+ */
 function comprovarSiNomesHiHaUnPerEliminar(int $fase, array $concursants_nous, array $concursants_per_comprovar)
 {
     /**
